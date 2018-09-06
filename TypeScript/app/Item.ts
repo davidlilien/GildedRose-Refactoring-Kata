@@ -1,4 +1,4 @@
-// This could be splitted in multiple files
+// This could be splitted in multiple files for better clarity
 
 export enum ItemType {
   AgedBrie = 'Aged Brie',

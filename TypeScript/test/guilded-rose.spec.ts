@@ -24,7 +24,7 @@ describe('Gilded Rose', function () {
         expect(gildedRose.items.length).to.equal(0);
     });
 
-    it('Item quality should never be more than 50 except for legendary items', function() {
+    it('Item quality should never be more than 50 for non legendary items', function() {
         const items = [
             ItemFactory.createAgedBrieItem(10, 10),
             ItemFactory.createBackstagePassItem(10, 10),
@@ -45,7 +45,7 @@ describe('Gilded Rose', function () {
         run(items, item => item.quality >= 0);
     });
 
-    it('quality should descrease by one if remaining days is posisive', function() {
+    it('quality should descrease by one if remaining days is positive', function() {
         const initialQuality = 40;
         const item = ItemFactory.createItem("Generic", 10, initialQuality);
         const gildedRose = new GildedRose([item]);
@@ -128,6 +128,48 @@ describe('Gilded Rose', function () {
         const gildedRose = new GildedRose([item]);
         gildedRose.updateQuality();
         expect(item.quality === 0).to.be.true;
+    });
+
+    it('quality should decrease by 2 on conjured item when sellIn >= 0', function() {
+        const initialQuality = 10;
+        const item = ItemFactory.createConjuredItem(10, initialQuality);
+        const gildedRose = new GildedRose([item]);
+        gildedRose.updateQuality();
+        expect(item.quality === initialQuality - 2).to.be.true;
+    });
+
+    it('quality should decrease by 4 on conjured item when sellIn < 0', function() {
+        const initialQuality = 10;
+        const item = ItemFactory.createConjuredItem(0, initialQuality);
+        const gildedRose = new GildedRose([item]);
+        gildedRose.updateQuality();
+        expect(item.quality === initialQuality - 4).to.be.true;
+    });
+
+    it('sellIn should be decremented on update for non legend item', function() {
+        const initialvalue = 10;
+        const items = [
+            ItemFactory.createAgedBrieItem(initialvalue, 10),
+            ItemFactory.createBackstagePassItem(initialvalue, 10),
+            ItemFactory.createConjuredItem(initialvalue,10),
+            ItemFactory.createItem('generic',initialvalue,10),
+        ];
+        const gildedRose = new GildedRose(items);
+        gildedRose.updateQuality();
+        gildedRose.items.forEach(item => {
+            expect(initialvalue - 1 === item.sellIn).to.be.true;
+        })
+    });
+
+    it('sellIn and quality should not be updated for legend item', function() {
+        const initialvalue = 10;
+        const item = ItemFactory.createSulfurasItem();
+        const initalSellIn = item.sellIn;
+        const initialQuality = item.quality;
+        const gildedRose = new GildedRose([item]);
+        gildedRose.updateQuality();
+        item.sellIn === initalSellIn;
+        item.quality === initialQuality;
     });
 });
 
