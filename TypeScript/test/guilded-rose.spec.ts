@@ -21,6 +21,7 @@ describe('Gilded Rose', function () {
 
     it('updateQuality without items should do nothing', function() {
         const gildedRose = new GildedRose();
+        gildedRose.updateQuality();
         expect(gildedRose.items.length).to.equal(0);
     });
 
