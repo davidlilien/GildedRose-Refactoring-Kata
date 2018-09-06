@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { GildedRose } from '../app/gilded-rose';
-import Item from '../app/Item';
+import { Item } from '../app/item';
 
 describe('Item', function () {
 

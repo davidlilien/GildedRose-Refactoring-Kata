@@ -1,13 +1,20 @@
-import Item from './Item';
+import { Item, ItemUpdater } from './item';
 
 export class GildedRose {
-    items: Array<Item>;
+    private items: Array<Item>;
 
-    constructor(items = []) {
+    public constructor(items = []) {
         this.items = items;
     }
 
-    updateQuality() {
+    public updateQuality() {
+        // Items were mutated in the original implementation 
+        // so we should keep that behavior to avoid side effect in the consumers of this class
+        this.items.forEach(item => ItemUpdater.update(item));
+        return this.items;
+    }
+
+    public updateQualityOld() {
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
                 if (this.items[i].quality > 0) {
@@ -57,3 +64,4 @@ export class GildedRose {
         return this.items;
     }
 }
+

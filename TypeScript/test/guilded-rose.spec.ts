@@ -1,14 +1,8 @@
 import 'mocha';
 import { expect } from 'chai';
 import { GildedRose } from '../app/gilded-rose';
-import Item from '../app/Item';
+import { Item, ItemType } from '../app/item';
 
-enum ItemType {
-    AgedBrie = 'Aged Brie',
-    Conjured = 'Conjured',
-    Sulfuras = 'Sulfuras, Hand of Ragnaros',
-    BackstagePasses = 'Backstage passes to a TAFKAL80ETC concert',
-}
 
 class ItemFactory {
     public static createAgedBrieItem = (sellIn: number, quality: number) => 
@@ -27,7 +21,7 @@ describe('Gilded Rose', function () {
 
     it('updateQuality without items should do nothing', function() {
         const gildedRose = new GildedRose();
-        expect(gildedRose.items).to.equal([]);
+        expect(gildedRose.items.length).to.equal(0);
     });
 
     it('Item quality should never be more than 50 except for legendary items', function() {
@@ -52,7 +46,7 @@ describe('Gilded Rose', function () {
     });
 
     it('quality should descrease by one if remaining days is posisive', function() {
-        const initialQuality = 100;
+        const initialQuality = 40;
         const item = ItemFactory.createItem("Generic", 10, initialQuality);
         const gildedRose = new GildedRose([item]);
         gildedRose.updateQuality();
@@ -60,7 +54,7 @@ describe('Gilded Rose', function () {
     });
 
     it('quality should descrease by two if remaining days is over', function() {
-        const initialQuality = 100;
+        const initialQuality = 40;
         const item = ItemFactory.createItem("Generic", -1, initialQuality);
         const gildedRose = new GildedRose([item]);
         gildedRose.updateQuality();
@@ -94,7 +88,7 @@ describe('Gilded Rose', function () {
     });
 
     it('quality should increase for backstage passes until sellIn 0', function() {
-        const item = ItemFactory.createBackstagePassItem(20, 10);
+        const item = ItemFactory.createBackstagePassItem(5, 10);
         const gildedRose = new GildedRose([item]);
         for (let i = 0; i<100; i++) {
             const previousQuality = item.quality;
@@ -135,15 +129,6 @@ describe('Gilded Rose', function () {
         gildedRose.updateQuality();
         expect(item.quality === 0).to.be.true;
     });
-/*
-    it('quality should decrease two times faster for conjured items', function() {
-        const item = ItemFactory.createConjuredItem(20, 20);
-        const gildedRose = new GildedRose([item]);
-        gildedRose.updateQuality();
-        expect(item.quality === 18).to.be.true;
-    });
-*/
-
 });
 
 const run = (items: Item[], condition: any) => {
