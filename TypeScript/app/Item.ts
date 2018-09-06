@@ -88,10 +88,17 @@ export class BackstagePassUpdateStrategy extends UpdateStrategy {
   }
 }
 
-export class ItemUpdater  {
-  public static update(item: Item) {
-    const strategy = ItemUpdater.getUpdateStrategy(item);
-    strategy.update(item);
+export class UpdatableItem  {
+  private item: Item;
+  private strategy: UpdateStrategy;
+
+  constructor(item: Item) {
+    this.item = item;
+    this.strategy = UpdatableItem.getUpdateStrategy(item);
+  }
+
+  public update() {
+    this.strategy.update(this.item);
   }
 
   private static getUpdateStrategy(item): UpdateStrategy {

@@ -1,4 +1,4 @@
-import { Item, ItemUpdater } from './item';
+import { Item, UpdatableItem } from './item';
 
 export class GildedRose {
     items: Array<Item>;
@@ -10,7 +10,10 @@ export class GildedRose {
     updateQuality() {
         // Items were mutated in the original implementation 
         // so we should keep that behavior to avoid side effect in the consumers of this class
-        this.items.forEach(item => ItemUpdater.update(item));
+        this.items.forEach(item => {
+            const updatableItem = new UpdatableItem(item);
+            updatableItem.update();
+        })
         return this.items;
     }
 }
